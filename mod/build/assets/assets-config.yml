@@ -12,7 +12,7 @@ load:
       attribution: Sisters.seamless, CC0, via Wikimedia Commons
       url: https://commons.wikimedia.org/wiki/File:Charcoal_dark_grey_rough_speckled_textured_cast_finish_seamless_metal_surface_texture.jpg
   tiles/graphics/base/line-solid-64.png:
-    nickname: line-solid
+    nickname: line-solid-straight
     on_load:
       tile:
         order: 1
@@ -26,7 +26,7 @@ load:
       attribution: "Magoc, via magoc:mis"
       url: $mod.homepage$
   tiles/graphics/base/line-dash-64.png:
-    nickname: line-dash
+    nickname: line-dash-straight
     on_load:
       tile:
         order: 1
@@ -39,27 +39,22 @@ load:
 build:
   roadbase:
     use: load.roadbase
-    filetype: png
-    output:
-      dir: mod/assets/graphics/terrain/material/
+    outputs:
+      filetype: png
+      dir: graphics/terrain/material/
       name: roadbase
-  roadbase-solid-line-straight:
+  roadbase-lined:
     use: load.roadbase
-    filetype: png
-    composite:
-      image1: self
-      image2: load.line-solid
-      mask: none
-    output:
-      dir: mod/assets/graphics/terrain/material/composite/
-      name: roadbase-solid-line-straight
-  roadbase-dash-line-straight:
-    use: load.roadbase
-    filetype: png
-    composite:
-      image1: self
-      image2: load.line-dash
-      mask: none
-    output:
-      dir: mod/assets/graphics/terrain/material/composite/
-      name: roadbase-dash-line-straight
+    outputs:
+      filetype: png
+      dir: graphics/terrain/material/composite/
+      name: roadbase-$composite-target$
+    jobs:
+      - composite-with:
+        asset: load.line-dash-straight
+        mask: none
+      - composite-with:
+        asset: load.line-solid-straight
+        mask: none
+        
+          

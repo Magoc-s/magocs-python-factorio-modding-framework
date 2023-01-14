@@ -2,6 +2,7 @@ import sys
 from threading import Lock
 from enum import Enum
 
+
 class LoggingSeverities(Enum):
     LOW = "Low"
     MEDIUM = "Medium"
@@ -59,6 +60,23 @@ class AssetLoadPhaseLoggerSingletonManager(type):
 class AssetModifyPhaseLoggerSingletonManager(type):
     """
     Singleton metaclass for managing the AssetModifyPhaseLogger singleton. Do not attempt to directly instantiate,
+    reference or otherwise use this class. Its function is autonomous.
+    """
+    _instances = {}
+
+    _lock: Lock = Lock()
+
+    def __call__(cls, *args, **kwargs):
+        with cls._lock:
+            if cls not in cls._instances:
+                instance = super().__call__(*args, **kwargs)
+                cls._instances[cls] = instance
+        return cls._instances[cls]
+
+
+class AssetOutputPhaseLoggerSingletonManager(type):
+    """
+    Singleton metaclass for managing the AssetOutputPhaseLogger singleton. Do not attempt to directly instantiate,
     reference or otherwise use this class. Its function is autonomous.
     """
     _instances = {}
@@ -134,6 +152,27 @@ class AssetModifyPhaseLogger(AbstractLogger, metaclass=AssetModifyPhaseLoggerSin
     def __init__(self):
         super().__init__()
 
+    def log(self, severity: LoggingSeverities, log: str) -> None:
+        """
+        Add a log line to the class `self.lines` instance var.
+
+        Raises:
+            AbstractLogger.CriticalLogRecievedError if a log of SEVERE or CRITICAL severity is added.
+            Do not attempt to catch this exception as the program has entered an unrecoverable state.
+
+        :param severity: A LoggingSeverities enum element indicating the severity of the logged event.
+        :param log: A string describing the event.
+        :return: None
+        """
+        self.lines.append(self.logger_pprint.log((severity, log)))
+        if severity == LoggingSeverities.CRITICAL or severity == LoggingSeverities.SEVERE:
+            _log = "\n".join(self.lines)
+            raise self.CriticalLogRecievedError(_log)
+
+
+class AssetOutputPhaseLogger(AbstractLogger, metaclass=AssetOutputPhaseLoggerSingletonManager):
+    def __init__(self):
+        super().__init__()
 
     def log(self, severity: LoggingSeverities, log: str) -> None:
         """
