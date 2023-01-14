@@ -1,0 +1,65 @@
+load:
+  tiles/graphics/base/roadbase.jpg:
+    nickname: roadbase
+    on_load:
+      scale:
+        order: 1
+        amount:
+          until_resolution: "512x512"
+          #by_value:
+    licensing:
+      license: CC 1.0
+      attribution: Sisters.seamless, CC0, via Wikimedia Commons
+      url: https://commons.wikimedia.org/wiki/File:Charcoal_dark_grey_rough_speckled_textured_cast_finish_seamless_metal_surface_texture.jpg
+  tiles/graphics/base/line-solid-64.png:
+    nickname: line-solid
+    on_load:
+      tile:
+        order: 1
+        amount:
+#          until_resolution: "512x512"
+          by_value:
+            - 8
+            - 16
+    licensing:
+      license: CC 1.0
+      attribution: "Magoc, via magoc:mis"
+      url: $mod.homepage$
+  tiles/graphics/base/line-dash-64.png:
+    nickname: line-dash
+    on_load:
+      tile:
+        order: 1
+        amount:
+          until_resolution: "512x512"
+    licensing:
+      license: CC 1.0
+      attribution: "Magoc, via magoc:mis"
+      url: $mod.homepage$
+build:
+  roadbase:
+    use: load.roadbase
+    filetype: png
+    output:
+      dir: mod/assets/graphics/terrain/material/
+      name: roadbase
+  roadbase-solid-line-straight:
+    use: load.roadbase
+    filetype: png
+    composite:
+      image1: self
+      image2: load.line-solid
+      mask: none
+    output:
+      dir: mod/assets/graphics/terrain/material/composite/
+      name: roadbase-solid-line-straight
+  roadbase-dash-line-straight:
+    use: load.roadbase
+    filetype: png
+    composite:
+      image1: self
+      image2: load.line-dash
+      mask: none
+    output:
+      dir: mod/assets/graphics/terrain/material/composite/
+      name: roadbase-dash-line-straight

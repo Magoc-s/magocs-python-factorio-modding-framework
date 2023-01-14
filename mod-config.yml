@@ -1,0 +1,23 @@
+info: # the information to dump into the `info.json` file contained in the root of the mod dir
+  name: Magocs-Industry-Styling
+  version: 1.0.0
+  title: Magoc's Industry Styling and Textures
+  description: A mod that introduces many tile and decoration options to compliment your industrial factory.
+  factorio_version: "1.1"
+  homepage: "https://github.com/Magoc-s/"
+  author: Magoc
+  dependencies:
+    - "base >= 1.1.74"
+    - "IndustrialRevolution3 >= 3.0.6"
+    - "IndustrialRevolution3Assets1 >= 1.0.4"
+    - "IndustrialRevolution3Assets2 >= 1.0.3"
+    - "IndustrialRevolution3Assets3 >= 1.0.1"
+    - "IndustrialRevolution3Assets4 >= 1.0.1"
+build: #information for the mod build phase
+  path_format: "windows" # options are [windows, linux]
+  factorio_dirs:
+    game_path: "E:\Old Steamapps\steamapps\common\Factorio"
+    mods_path: "C:\Users\Julian\AppData\Roaming\Factorio\mods"
+  zip_options:
+    store_only: true
+    just_refresh_on_rebuild: true
