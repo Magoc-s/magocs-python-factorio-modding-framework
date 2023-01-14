@@ -132,9 +132,7 @@ class BuildAsset:
 
 
 class AssetBuilder(metaclass=AssetBuilderSingletonManager):
-    def __init__(self, load_table: dict) -> None:
-        self.load_table = LoadTable()
-        self.load_table.set_ref(load_table)
+    def __init__(self) -> None:
         self.build_table = loader.AssetLoader().conf["build"]
         self.built: list[BuildAsset] = []
         self.logger: logger.AssetOutputPhaseLogger = logger.AssetOutputPhaseLogger()
