@@ -1,5 +1,5 @@
 load:
-  tiles/graphics/base/roadbase.jpg:
+  tiles/graphics/base/roadbase.png:
     nickname: roadbase
     on_load:
       scale:
@@ -17,10 +17,7 @@ load:
       tile:
         order: 1
         amount:
-#          until_resolution: "512x512"
-          by_value:
-            - 8
-            - 16
+          until_resolution: "512x512"
     licensing:
       license: CC 1.0
       attribution: "Magoc, via magoc:mis"
@@ -37,12 +34,12 @@ load:
       attribution: "Magoc, via magoc:mis"
       url: $mod.homepage$
 build:
-  roadbase:
-    use: load.roadbase
-    outputs:
-      filetype: png
-      dir: graphics/terrain/material/
-      name: roadbase
+#  roadbase:
+#    use: load.roadbase
+#    outputs:
+#      filetype: png
+#      dir: graphics/terrain/material/
+#      name: roadbase
   roadbase-lined:
     use: load.roadbase
     outputs:
@@ -51,10 +48,10 @@ build:
       name: roadbase-$composite-target$
     jobs:
       - composite-with:
-        asset: load.line-dash-straight
-        mask: none
+          asset: load.line-dash-straight
+          mask: none
       - composite-with:
-        asset: load.line-solid-straight
-        mask: none
+          asset: load.line-solid-straight
+          mask: none
         
           

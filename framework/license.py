@@ -31,6 +31,13 @@ class AbstractLicense:
         self.attribution = license_dict["attribution"]
         self.url = license_dict["url"]
 
+    def substitute_url(self, sub_map: dict) -> None:
+        _substituted = self.url
+        for sub_string in sub_map.keys():
+            if sub_string in _substituted:
+                _substituted = _substituted.replace(sub_string, sub_map[sub_string])
+        self.url = _substituted
+
 
 class AssetLicense(AbstractLicense):
     def __init__(self, license_dict: dict):
