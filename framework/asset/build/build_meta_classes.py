@@ -4,8 +4,7 @@ from threading import Lock
 
 class AssetBuilderSingletonManager(type):
     """
-    Singleton metaclass for managing the AssetBuilder singleton. Do not attempt to directly instantiate, reference
-    or otherwise use this class. Its function is autonomous.
+    Singleton metaclass for managing the AssetBuilder singleton.
     """
     _instances = {}
 
@@ -21,8 +20,7 @@ class AssetBuilderSingletonManager(type):
 
 class LoadTableSingletonManager(type):
     """
-    Singleton metaclass for managing the LoadTable singleton. Do not attempt to directly instantiate, reference
-    or otherwise use this class. Its function is autonomous.
+    Singleton metaclass for managing the LoadTable singleton.
     """
     _instances = {}
 
@@ -37,6 +35,10 @@ class LoadTableSingletonManager(type):
 
 
 class LoadTable(metaclass=LoadTableSingletonManager):
+    """
+    DEPRECATED in favour of framework.asset.manager.manager.AssetManager
+    DO NOT USE
+    """
     class LoadTableNotLoadedYetError(Exception):
         def __init__(self, *args) -> None:
             super().__init__(*args)

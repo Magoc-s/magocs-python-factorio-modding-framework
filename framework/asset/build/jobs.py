@@ -1,37 +1,43 @@
 from __future__ import annotations
 import framework.asset.asset_on_load as on_load
 import framework.asset.build.build_meta_classes as build_meta
+import framework.asset.manager.manager as manager
 
 
 class AbstractAssetTask:
-    def __init__(self):
+    def __init__(self, handler_ref: tuple[int, str]):
         self.composite_mask: on_load.ParseAsset | None = None
         self.asset_to_composite_with: on_load.ParseAsset | None = None
         self.naming_map: dict | None = None
+        self.manager = manager.AssetManager()
+        self.handler = handler_ref
 
 
 class AssetCompositor(AbstractAssetTask):
-    def __init__(self, job_dict: dict):
+    def __init__(self, handler_ref: tuple[int, str], job_dict: dict):
         """
         TODO: implement functionality to reference assets from outside of `load`, like `base`.
         :param job_dict:
         """
-        super().__init__()
+        super().__init__(handler_ref)
 
         _composite_target: str = job_dict["asset"].strip()
-        if _composite_target.startswith("load."):
-            self.asset_to_composite_with = build_meta.LoadTable().get_ref()[_composite_target.replace("load.", "", 1)]
+        self.asset_to_composite_with = self.manager.get(_composite_target)
 
         _mask_target: str = job_dict["mask"].strip()
         if _mask_target == "none":
             self.composite_mask = None
-        elif _mask_target.startswith("load."):
-            self.composite_mask = build_meta.LoadTable().get_ref()[_mask_target.replace("load.", "", 1)]
+        else:
+            self.composite_mask = self.manager.get(_mask_target)
 
-        self.naming_map = {
-            "$mask-target$": str(_mask_target).replace("load.", "", 1),
-            "$composite-target$": str(_composite_target).replace("load.", "", 1)
-        }
-
-    def get_naming_map(self) -> dict:
-        return self.naming_map
+        self.manager.register_substitution(
+            self.handler,
+            "$composite-target$",
+            self.asset_to_composite_with.asset.nickname
+        )
+        if self.composite_mask is not None:
+            self.manager.register_substitution(
+                self.handler,
+                "$mask-target$",
+                self.composite_mask.asset.nickname
+            )

@@ -14,8 +14,12 @@ load:
   tiles/graphics/base/line-solid-64.png:
     nickname: line-solid-straight
     on_load:
-      tile:
+      rotate:
         order: 1
+        amount:
+          by_value: [45]
+      tile:
+        order: 2
         amount:
           until_resolution: "512x512"
     licensing:

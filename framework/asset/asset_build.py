@@ -9,6 +9,7 @@ import framework.asset.asset_on_load as on_load
 import framework.asset.build.build_meta_classes as build_meta
 import framework.asset.build.jobs as jobs
 import framework.asset.build.build_helpers as helpers
+import framework.asset.manager.manager as manager
 
 
 class BuildAsset:
@@ -26,22 +27,23 @@ class BuildAsset:
         self.output_dir = helpers.BUILT_ASSETS_PATH + yaml_dict[self.build_reference]["outputs"]["dir"]
 
         self.logger = logger.AssetOutputPhaseLogger()
+        self.manager = manager.AssetManager()
 
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir, exist_ok=True)
 
-        self.naming_scheme: helpers.BuiltAssetNamer = helpers.BuiltAssetNamer(yaml_dict[self.build_reference]["outputs"]["name"])
+        self.naming_scheme: helpers.BuiltAssetNamer = \
+            helpers.BuiltAssetNamer(yaml_dict[self.build_reference]["outputs"]["name"])
 
         _use_asset: str = yaml_dict[self.build_reference]["use"].strip()
-        if _use_asset.startswith("load."):
-            self.base_asset: on_load.ParseAsset = \
-                build_meta.LoadTable().get_ref()[_use_asset.replace("load.", "", 1)]
+        self.base_asset: on_load.ParseAsset = self.manager.get(_use_asset)
 
         self.jobs: list[tuple[str, jobs.AbstractAssetTask]] = []
-        for job in yaml_dict[self.build_reference]["jobs"]:
+        for idx, job in enumerate(yaml_dict[self.build_reference]["jobs"]):
+            _self_ref = (idx, self.build_reference)
             if list(job.keys())[0] == "composite-with":
-                _compositor = jobs.AssetCompositor(job["composite-with"])
-                _job_name = self.naming_scheme.perform_substitution(_compositor.get_naming_map())
+                _compositor = jobs.AssetCompositor(_self_ref, job["composite-with"])
+                _job_name = self.naming_scheme.perform_substitution(_self_ref)
                 self.jobs.append((_job_name, _compositor))
 
         for name, job in self.jobs:
@@ -56,6 +58,7 @@ class BuildAsset:
         if _composited_image is None:
             raise self.UnrecognisedJobClassException(f"Job type {job} unrecognised/not implemented.")
 
+        self.manager.register_asset(name, self, "build")
         return _composited_image
 
     def _run_asset_compositor_job(self, name, job) -> Image:

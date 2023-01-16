@@ -1,28 +1,11 @@
 import os
 import yaml
-from threading import Lock
 from PIL import Image
 import framework.phase_logger as logger
+import framework.asset.load.load_meta_classes as load_meta
 
 BUILDABLE_ASSETS_PATH = 'mod/build/assets/'
 BUILDABLE_ASSETS_CONFIG_FILE = 'assets-config.yml'
-
-
-class AssetLoaderSingletonManager(type):
-    """
-    Singleton metaclass for managing the AssetLoader singleton. Do not attempt to directly instantiate, reference
-    or otherwise use this class. Its function is autonomous.
-    """
-    _instances = {}
-
-    _lock: Lock = Lock()
-
-    def __call__(cls, *args, **kwargs):
-        with cls._lock:
-            if cls not in cls._instances:
-                instance = super().__call__(*args, **kwargs)
-                cls._instances[cls] = instance
-        return cls._instances[cls]
 
 
 class LoadAsset:
@@ -62,7 +45,7 @@ class LoadAsset:
         return f"{self.nickname} [{self.path}] => {self.image}"
 
 
-class AssetLoader(metaclass=AssetLoaderSingletonManager):
+class AssetLoader(metaclass=load_meta.AssetLoaderSingletonManager):
     """
     The AssetLoader is a (thread-safe) singleton class designed to read the `load` key of the
     assets-config.yml file and load each respective asset mentioned there, storing a list of

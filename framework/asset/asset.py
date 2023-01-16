@@ -3,6 +3,7 @@ import framework.asset.asset_load
 import framework.asset.asset_on_load
 import framework.asset.asset_build
 import framework.asset.build.build_meta_classes
+import framework.asset.manager.manager
 
 
 class Assets:
@@ -11,12 +12,10 @@ class Assets:
     def __init__(self):
         self.load = framework.asset.asset_load.AssetLoader()
         self.triggers = framework.asset.asset_on_load.AssetParser()
+        self.manager = framework.asset.manager.manager.AssetManager()
 
-        self.load_table = {}
         for parsed_asset in self.triggers.parsed:
-            self.load_table[parsed_asset.asset.nickname] = parsed_asset
-        self.load_table_wrapper = framework.asset.build.build_meta_classes.LoadTable()
-        self.load_table_wrapper.set_ref(self.load_table)
+            self.manager.register_asset(parsed_asset.asset.nickname, parsed_asset, "load")
 
         self.build = framework.asset.asset_build.AssetBuilder()
 
