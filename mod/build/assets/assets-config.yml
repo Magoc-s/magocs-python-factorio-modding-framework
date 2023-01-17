@@ -1,6 +1,6 @@
 load:
-  tiles/graphics/base/roadbase.png:
-    nickname: roadbase
+  roadbase:
+    path: tiles/graphics/base/roadbase.png
     on_load:
       scale:
         order: 1
@@ -11,8 +11,8 @@ load:
       license: CC 1.0
       attribution: Sisters.seamless, CC0, via Wikimedia Commons
       url: https://commons.wikimedia.org/wiki/File:Charcoal_dark_grey_rough_speckled_textured_cast_finish_seamless_metal_surface_texture.jpg
-  tiles/graphics/base/line-solid-64.png:
-    nickname: line-solid-straight
+  line-solid-straight:
+    path: tiles/graphics/base/line-solid-64.png
     on_load:
       rotate:
         order: 1
@@ -26,8 +26,8 @@ load:
       license: CC 1.0
       attribution: "Magoc, via magoc:mis"
       url: $mod.homepage$
-  tiles/graphics/base/line-dash-64.png:
-    nickname: line-dash-straight
+  line-dash-straight:
+    path: tiles/graphics/base/line-dash-64.png
     on_load:
       tile:
         order: 1

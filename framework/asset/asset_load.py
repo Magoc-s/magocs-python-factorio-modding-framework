@@ -3,6 +3,7 @@ import yaml
 from PIL import Image
 import framework.phase_logger as logger
 import framework.asset.load.load_meta_classes as load_meta
+import framework.license as license
 
 BUILDABLE_ASSETS_PATH = 'mod/build/assets/'
 BUILDABLE_ASSETS_CONFIG_FILE = 'assets-config.yml'
@@ -27,12 +28,13 @@ class LoadAsset:
             super().__init__(*args)
 
     def __init__(self, yaml_key: dict) -> None:
-        self.path: str = list(yaml_key.keys())[0]
-        self.nickname: str = yaml_key[self.path]["nickname"]
+        self.nickname: str = list(yaml_key.keys())[0]
+        self.path: str = yaml_key[self.nickname]["path"]
         self.image: Image = Image.open(os.path.join(BUILDABLE_ASSETS_PATH, self.path))
         self.finalised: bool = False
-        self.license: dict = yaml_key[self.path]["licensing"]
-        self.on_load: dict = yaml_key[self.path]["on_load"] if "on_load" in yaml_key[self.path].keys() else None
+        self.license: dict = yaml_key[self.nickname]["licensing"]
+        # self.license: license.AssetLicense = license.AssetLicense(yaml_key[self.nickname]["licensing"])
+        self.on_load: dict = yaml_key[self.nickname]["on_load"] if "on_load" in yaml_key[self.nickname].keys() else None
 
     def dispose(self) -> None:
         if self.finalised:
